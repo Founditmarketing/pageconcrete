@@ -1,0 +1,577 @@
+/* --- Divi JS compatibility ---
+   Divi's waypoint JS normally triggers opacity:0 → 1 animations.
+   Without it, all et_animated elements stay invisible. Override here. */
+.et_animated,
+.et-waypoint,
+.et-before-scroll-animation {
+  opacity: 1 !important;
+  -webkit-animation: none !important;
+  animation: none !important;
+  transform: none !important;
+  visibility: visible !important;
+}
+
+/* Slider: all slides absolutely stacked; JS drives opacity via inline styles.
+   Using position:absolute avoids any display:none/grid conflicts from Divi CSS. */
+.et_pb_slider { overflow: hidden; position: relative; }
+.et_pb_slides {
+  position: relative;
+  min-height: 650px;
+}
+/* Override Divi's inline CSS: .et_pb_slider .et_pb_slide{display:none}
+   and .et_pb_slider .et_pb_slide:first-child{display:list-item} */
+.et_pb_slider .et_pb_slide,
+.et_pb_slider .et_pb_slide:first-child {
+  display: block !important;
+}
+.et_pb_slide {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%;
+  min-height: 650px;
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+  opacity: 0;
+}
+.et_pb_slide.et-pb-active-slide { opacity: 1; }
+@media (max-width: 980px) {
+  .et_pb_slides { min-height: 400px; }
+  .et_pb_slide  { min-height: 400px; }
+}
+
+/* Kill Divi's fadeBottom animation on slide text — fill-mode:both + missing keyframes → invisible */
+.et_pb_slide_description,
+.et_pb_slide_title,
+.et_pb_slide_content,
+.et_pb_slide_title a,
+.et-pb-active-slide .et_pb_slide_description {
+  opacity: 1 !important;
+  visibility: visible !important;
+  -webkit-animation: none !important;
+  animation: none !important;
+  transform: none !important;
+}
+
+/* Footer copyright bar background (was set by Divi theme CSS) */
+.et_pb_section_1_tb_footer {
+  background-color: #0047ab !important;
+  padding: 15px 0 !important;
+}
+.et_pb_section_1_tb_footer p {
+  color: #fff !important;
+  margin: 0;
+  padding: 0;
+  text-align: center;
+}
+
+/* --- Client edits from June 2026 review call --- */
+
+/* Prominent "Get A Free Quote" button in the main nav */
+#top-menu .free-quote-btn {
+    background: #0d62d9;
+    color: #fff !important;
+    padding: 12px 20px !important;
+    border-radius: 5px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+#top-menu .free-quote-btn:hover {
+    background: #0a4fb0;
+    opacity: 1 !important;
+}
+#top-menu li.menu-item-cta {
+    padding-right: 0;
+}
+
+/* Long Service Area dropdown: keep it on screen and scrollable */
+#top-menu .menu-item-57 .sub-menu {
+    max-height: 65vh;
+    overflow-y: auto;
+}
+
+/* ---------- Desktop (>980px): full-width header ---------- */
+@media (min-width: 981px) {
+    .mobile-quote-btn {
+        display: none;
+    }
+    #top-header .container,
+    #main-header .container {
+        width: 100% !important;
+        max-width: 100% !important;
+        padding-left: 40px !important;
+        padding-right: 40px !important;
+        box-sizing: border-box;
+    }
+    #et-top-navigation {
+        float: none !important;
+        width: 100%;
+        padding: 0 !important;
+    }
+    #top-menu-nav,
+    #top-menu {
+        float: none;
+        width: 100%;
+    }
+    #top-menu {
+        display: flex;
+        align-items: center;
+        position: relative;
+        min-height: 140px;
+    }
+    #top-menu > li {
+        position: relative;
+    }
+    /* Divi adds huge bottom padding to nav links; kill it so links and the
+       quote button share one vertical center */
+    #top-menu > li > a {
+        padding-bottom: 0 !important;
+        padding-top: 0 !important;
+        white-space: nowrap;
+    }
+    /* breathing room between FAQs and the Get A Free Quote button */
+    #top-menu li.menu-item-cta {
+        margin-left: 24px;
+    }
+}
+
+/* Narrow desktop (981-1279px): the split menu can't clear the logo, so
+   stack a centered logo above a centered menu instead */
+@media (min-width: 981px) and (max-width: 1279px) {
+    #top-menu .logo-menu-item {
+        display: none;
+    }
+    #main-header .logo_container {
+        display: block;
+        position: static;
+        height: auto;
+        width: 100%;
+        text-align: center;
+        padding: 12px 0 0;
+    }
+    #main-header .logo_container .logo_helper {
+        display: none;
+    }
+    #logo {
+        height: 90px;
+        max-height: 90px;
+        width: auto;
+    }
+    #top-menu {
+        min-height: 0;
+        justify-content: center;
+        font-size: 11.5px;
+        padding: 10px 0 16px;
+    }
+    #top-menu > li {
+        padding-right: 9px;
+    }
+    #top-menu .free-quote-btn {
+        padding: 8px 11px !important;
+    }
+}
+
+/* Split menu (>=1280px): logo pinned to the exact center of the header,
+   menu items clustered around it (not spread to the edges) */
+@media (min-width: 1280px) {
+    #main-header .logo_container {
+        display: none;
+    }
+    #top-menu {
+        font-size: 11px;
+        justify-content: center;
+    }
+    #top-menu > li {
+        padding-right: 8px;
+    }
+    #top-menu .logo-menu-item {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        padding: 0;
+    }
+    #top-menu .logo-menu-item img {
+        display: block;
+        height: 90px;
+        width: auto;
+    }
+    /* clearance on either side of the centered logo so the two halves
+       sit a comfortable distance from it */
+    #top-menu li.menu-item-other-services {
+        padding-right: 100px;
+    }
+    #top-menu li.menu-item-57 {
+        padding-left: 100px;
+    }
+    #top-menu .free-quote-btn {
+        padding: 9px 14px !important;
+    }
+    /* the left half runs wider than the right; pad the right end so the two
+       halves balance and the centered logo sits symmetrically between them */
+    #top-menu li.menu-item-cta {
+        margin-right: 60px;
+    }
+}
+
+/* Roomier desktops: scale type and logo back up */
+@media (min-width: 1450px) {
+    #top-menu {
+        font-size: 13px;
+    }
+    #top-menu > li {
+        padding-right: 14px;
+    }
+    #top-menu .logo-menu-item img {
+        height: 110px;
+    }
+    #top-menu li.menu-item-other-services {
+        padding-right: 110px;
+    }
+    #top-menu li.menu-item-57 {
+        padding-left: 110px;
+    }
+    #top-menu .free-quote-btn {
+        padding: 11px 16px !important;
+    }
+}
+
+@media (min-width: 1600px) {
+    #top-menu {
+        font-size: 14px;
+    }
+    #top-menu > li {
+        padding-right: 18px;
+    }
+    #top-menu .logo-menu-item img {
+        height: 120px;
+    }
+    #top-menu li.menu-item-other-services {
+        padding-right: 120px;
+    }
+    #top-menu li.menu-item-57 {
+        padding-left: 120px;
+    }
+    #top-menu .free-quote-btn {
+        padding: 12px 20px !important;
+    }
+}
+
+/* Mobile: logo centered, Free Quote button pinned left, hamburger right */
+@media (max-width: 980px) {
+    #top-menu .logo-menu-item,
+    .et_mobile_menu .logo-menu-item {
+        display: none;
+    }
+    /* full-width header so the quote button can sit near the true left edge
+       and the logo centers across the whole viewport */
+    #main-header .container,
+    #main-header .et_menu_container {
+        position: relative;
+        width: 100% !important;
+        max-width: 100% !important;
+        padding-left: 10px !important;
+        padding-right: 10px !important;
+        box-sizing: border-box;
+    }
+    /* taller header so the logo can grow */
+    #main-header .et_menu_container {
+        min-height: 110px;
+    }
+    /* vertically center the hamburger in the taller header */
+    #main-header #et-top-navigation {
+        float: none !important;
+        width: 100%;
+        height: 110px;
+        padding: 0 !important;
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+    }
+    /* The Divi hamburger is an icon-font glyph (ETmodules "a") whose
+       internal metrics aren't vertically centered, so it never lines up
+       with the left form button. Replace it with a symmetric SVG so it
+       centers perfectly, parallel to the left button. */
+    #main-header .mobile_menu_bar {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        line-height: 0;
+    }
+    #main-header .mobile_menu_bar::before {
+        content: "" !important;
+        display: block;
+        width: 28px;
+        height: 22px;
+        background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M3 6h18M3 12h18M3 18h18' stroke='%23303030' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat center / contain;
+    }
+    #main-header .logo_container {
+        left: 0;
+        width: 100%;
+        text-align: center;
+    }
+    #logo {
+        max-height: 100px;
+        height: 100px;
+    }
+    .mobile-quote-btn {
+        position: absolute;
+        left: 6px;
+        top: 50%;
+        transform: translateY(-50%);
+        z-index: 10;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        color: #303030 !important;
+        padding: 9px;
+        border-radius: 5px;
+    }
+    .mobile-quote-btn svg {
+        display: block;
+        width: 24px;
+        height: 24px;
+    }
+    /* collapsible submenus in the mobile dropdown (overrides Divi's
+       force-expanded display:block!important) so the menu stays compact */
+    /* Show/hide the mobile dropdown based on hamburger state */
+    #et_mobile_nav_menu .et_mobile_menu { display: none; }
+    #et_mobile_nav_menu .mobile_nav.opened .et_mobile_menu { display: block; }
+
+    #et_mobile_nav_menu .et_mobile_menu li.menu-item-has-children > ul {
+        display: none !important;
+        visibility: visible !important;
+    }
+    #et_mobile_nav_menu .et_mobile_menu li.menu-item-has-children.submenu-open > ul {
+        display: block !important;
+    }
+    #et_mobile_nav_menu .et_mobile_menu li.menu-item-has-children {
+        position: relative;
+    }
+    /* tap target + caret on the right of each parent item */
+    #et_mobile_nav_menu .et_mobile_menu .submenu-toggle {
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 48px;
+        /* match the parent link row (14px/23px line-height + 10px padding
+           top & bottom) so the caret centers on the label */
+        height: 43px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+    }
+    #et_mobile_nav_menu .et_mobile_menu .submenu-toggle::before {
+        content: "";
+        width: 0;
+        height: 0;
+        border-left: 5px solid transparent;
+        border-right: 5px solid transparent;
+        border-top: 6px solid #2ea3f2;
+        transition: transform 0.2s ease;
+    }
+    #et_mobile_nav_menu .et_mobile_menu li.submenu-open > .submenu-toggle::before {
+        transform: rotate(180deg);
+    }
+}
+
+/* Move Facebook icon to right side of top header bar */
+#top-header #et-secondary-menu { display: none !important; }
+#top-header #et-info {
+    float: none !important;
+    display: flex !important;
+    align-items: center;
+    width: 100%;
+}
+#top-header #et-info .et-social-icons {
+    margin-left: auto;
+    display: flex !important;
+    align-items: center;
+}
+#top-header #et-info .et-social-facebook .icon {
+    background: #fff !important;
+    border-radius: 4px;
+    width: 26px;
+    height: 26px;
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+}
+#top-header #et-info .et-social-facebook .icon::before {
+    content: "" !important;
+    display: block;
+    width: 16px;
+    height: 16px;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%231877f2' d='M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z'/%3E%3C/svg%3E") no-repeat center / contain;
+}
+
+/* ======================================================
+   Restored section backgrounds & layout corrections
+   ====================================================== */
+
+/* --- "What Can We Do For You?" section background --- */
+.et_pb_section_2 {
+    background-color: #eef2f9 !important;
+}
+
+/* --- Blurb checkmark icons: smaller, blue, horizontal --- */
+.et_pb_blurb .et_pb_blurb_content {
+    display: flex !important;
+    align-items: flex-start !important;
+    gap: 1rem;
+}
+.et_pb_blurb .et_pb_main_blurb_image {
+    flex-shrink: 0 !important;
+    margin-bottom: 0 !important;
+    width: auto !important;
+}
+.et_pb_blurb .et-pb-icon {
+    font-size: 40px !important;
+    color: #0047ab !important;
+    line-height: 1 !important;
+    display: block;
+}
+.et_pb_blurb .et_pb_blurb_container {
+    flex: 1;
+    padding-top: 6px;
+}
+.et_pb_blurb .et_pb_blurb_description p {
+    margin: 0;
+    font-weight: 600;
+    font-size: 0.95rem;
+}
+
+/* --- "Discover the Beauty of Stamped Concrete" --- */
+.et_pb_section_3 {
+    background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url(/stamped.jpg) !important;
+    background-size: cover !important;
+    background-position: center !important;
+    background-attachment: fixed !important;
+    padding: 80px 0 !important;
+}
+.et_pb_section_3 .et_pb_text_inner h2 {
+    color: #fff !important;
+    font-size: 2.8rem !important;
+    line-height: 1.2 !important;
+    margin-bottom: 0.75rem !important;
+}
+.et_pb_section_3 .et_pb_text_inner p {
+    color: #fff !important;
+    font-size: 1.2rem !important;
+}
+.et_pb_button_4_wrapper {
+    text-align: center;
+    margin-top: 0.5rem;
+}
+.et_pb_button_4 {
+    background-color: #142ea7 !important;
+    color: #fff !important;
+    padding: 14px 48px !important;
+    font-size: 1.1rem !important;
+    border-radius: 5px !important;
+    display: inline-block !important;
+    margin-top: 1rem !important;
+}
+
+/* --- "Our Service Area" section background --- */
+.et_pb_section_5 {
+    background-color: #eef2f9 !important;
+}
+.et_pb_row_7 {
+    background: #fff !important;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.1) !important;
+    border-radius: 8px !important;
+    padding: 2rem 2.5rem !important;
+}
+
+/* --- Testimonial card (brownish-tan) --- */
+.et_pb_column_17 {
+    background-color: #a08272 !important;
+    padding: 2.5rem 2rem !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+}
+.et_pb_column_17 .et_pb_text_13 .et_pb_text_inner h3 {
+    color: #fff !important;
+    font-size: 1.1rem !important;
+    font-style: italic !important;
+    font-weight: 400 !important;
+    line-height: 1.7 !important;
+}
+.et_pb_column_17 .et_pb_text_13 .et_pb_text_inner p,
+.et_pb_column_17 .et_pb_text_13 .et_pb_text_inner a {
+    color: #fff !important;
+}
+
+/* --- Bottom CTA promo boxes --- */
+.et_pb_cta_0,
+.et_pb_cta_1 {
+    min-height: 290px !important;
+    background-size: cover !important;
+    background-position: center !important;
+    padding: 3rem 2rem !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+    align-items: center !important;
+    text-align: center !important;
+}
+.et_pb_cta_0 .et_pb_module_header,
+.et_pb_cta_1 .et_pb_module_header {
+    color: #fff !important;
+    font-size: 1.6rem !important;
+}
+/* "Add Outdoor Space" */
+.et_pb_cta_0 {
+    background-image: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url(/wp-content/uploads/2024/01/11802648_10153374667856760_1620663114178159160_o_2.jpg) !important;
+}
+/* "Commercial Concrete Services" */
+.et_pb_cta_1 {
+    background-image: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url(/wp-content/uploads/2024/01/d2.jpg) !important;
+}
+
+/* --- Row 8 (Add Outdoor Space / Testimonial / Gallery) — wider than default --- */
+.et_pb_row_8 {
+    width: 95% !important;
+    max-width: 1400px !important;
+}
+
+/* --- Gallery sections: tighten spacing between them --- */
+.et_pb_section_6 {
+    padding-bottom: 0 !important;
+}
+.et_pb_section_7 {
+    padding-top: 0 !important;
+}
+
+/* --- "Why Should You Choose Us?" right-column photo --- */
+.et_pb_column_13 {
+    min-height: 450px !important;
+    overflow: hidden;
+}
+.et_pb_column_13 img {
+    width: 100%;
+    max-height: 550px;
+    height: auto;
+    object-fit: cover;
+    border-radius: 8px;
+    display: block;
+}
+
+/* --- Gallery column — driveway photo, centered Gallery button --- */
+.et_pb_column_18 {
+    background-image: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url(/originalpics/driveways-image.jpg) !important;
+    background-size: cover !important;
+    background-position: center !important;
+    min-height: 300px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+    align-items: center !important;
+}
+.et_pb_button_7_wrapper {
+    text-align: center;
+}
