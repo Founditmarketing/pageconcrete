@@ -26,7 +26,7 @@ export default async function handler(req, res) {
 
   const { error } = await resend.emails.send({
     from: 'Page Concrete <info@pageconcretenc.com>',
-    to: ['info@pageconcretenc.com'],
+    to: ['info@pageconcretenc.com', 'drew@pageconcretenc.com'],
     replyTo: email,
     subject: `New Quote Request from ${name}`,
     html: `
