@@ -25,8 +25,8 @@ export default async function handler(req, res) {
   const name = [first_name, last_name].filter(Boolean).join(' ') || 'Website Visitor';
 
   const { error } = await resend.emails.send({
-    from: 'Page Concrete <hello@pageconcretenc.com>',
-    to: ['nacinc4@gmail.com'],
+    from: 'Page Concrete <info@pageconcretenc.com>',
+    to: ['info@pageconcretenc.com'],
     replyTo: email,
     subject: `New Quote Request from ${name}`,
     html: `
